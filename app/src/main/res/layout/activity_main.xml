@@ -8,8 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80px"
@@ -41,7 +39,6 @@
             android:background="@color/button_background"/>
     </LinearLayout>
 
-    <!-- Вертикальный LinearLayout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80px"
@@ -55,6 +52,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="TextText"
+            android:textAlignment="center"
             android:textColor="@color/button_text"
             android:background="@color/button_background"/>
 
@@ -63,6 +61,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="TextText"
+            android:textAlignment="center"
             android:textColor="@color/button_text"
             android:background="@color/button_background"/>
 
@@ -71,6 +70,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="TextText"
+            android:textAlignment="center"
             android:textColor="@color/button_text"
             android:background="@color/button_background"/>
     </LinearLayout>
@@ -79,10 +79,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="398dp">
-
-        <!-- Второй TextView в правом верхнем углу -->
-
-        <!-- Третий TextView в левом нижнем углу -->
 
         <TextView
             android:id="@+id/textView1"
