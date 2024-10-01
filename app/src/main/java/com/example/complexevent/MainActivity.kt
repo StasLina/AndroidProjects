@@ -2,6 +2,11 @@ package com.example.complexevent
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,11 +17,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var buttonSave: Button;
 
 
-    lateinit var editText = findViewById(R.id.editText)
-    lateinit var textView = findViewById(R.id.textView)
-    lateinit var progressBar = findViewById(R.id.progressBar)
-    lateinit var checkBox = findViewById(R.id.checkBox)
-
+    lateinit var editText : EditText
+    lateinit var textView : TextView
+    lateinit var progressBar : ProgressBar
+    lateinit var checkBox : CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         buttonSave = findViewById<Button>(R.id.BtSave);
 
-
-        editText = findViewById(R.id.editText)
-        textView = findViewById(R.id.textView)
-        progressBar = findViewById(R.id.progressBar)
-        checkBox = findViewById(R.id.checkBox)
+         editText = findViewById(R.id.ETInputText)
+         textView = findViewById(R.id.TVResult)
+         progressBar = findViewById(R.id.PBProgress)
+         checkBox = findViewById(R.id.CBSave)
 
         // Обработчик нажатия на кнопку
         buttonSave.setOnClickListener {

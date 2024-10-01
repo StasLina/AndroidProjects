@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
     <EditText
+        android:id="@+id/ETInputText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24dp"
@@ -17,6 +18,7 @@
         ></EditText>
 
     <CheckBox
+        android:id="@+id/CBSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Точно сохранить?"
@@ -32,6 +34,7 @@
         android:layout_gravity="center"></Button>
 
     <TextView
+        android:id="@+id/TVResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Нажмите на кнопку и текст сохраниться здесь"
@@ -43,7 +46,10 @@
         android:textAlignment="center"/>
 
     <ProgressBar
+        android:id="@+id/PBProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"></ProgressBar>
+        android:layout_gravity="center"
+        style="?android:attr/progressBarStyleHorizontal"
+        ></ProgressBar>
 </LinearLayout>
