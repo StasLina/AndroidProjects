@@ -53,11 +53,11 @@ class MainActivity : AppCompatActivity() {
                 if (currentProgress < 100) {
                     progressBar.progress = currentProgress + 10
                 } else {
-                    Toast.makeText(this, "Progress is already at 100%", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Прогресс бар уже полный%", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 // Сообщение, если флажок не установлен
-                Toast.makeText(this, "Please check the box to save text", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Пожалуйсто нажмите галочку сохранить", Toast.LENGTH_SHORT).show()
             }
         }
     }
