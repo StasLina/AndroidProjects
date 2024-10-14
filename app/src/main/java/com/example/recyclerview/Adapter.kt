@@ -7,10 +7,26 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class Adapter(
-    private val context: Context,
+class Adapter : RecyclerView.Adapter<Adapter.ViewHolder> {
+
+    private val context: Context
     private val list: ArrayList<ColorData>
-) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+    private var cellClickListener: CellClickListener? = null
+    private var onCellClick: ((String) -> Unit)? = null
+
+    // Конструктор с CellClickListener
+    constructor(context: Context, list: ArrayList<ColorData>, cellClickListener: CellClickListener) {
+        this.context = context
+        this.list = list
+        this.cellClickListener = cellClickListener
+    }
+
+    // Конструктор с лямбда-выражением
+    constructor(context: Context, list: ArrayList<ColorData>, onCellClick: (String) -> Unit) {
+        this.context = context
+        this.list = list
+        this.onCellClick = onCellClick
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val colorView: View = itemView.findViewById(R.id.colorView)
@@ -27,10 +43,18 @@ class Adapter(
         holder.colorName.text = colorData.colorName
         holder.colorView.setBackgroundColor(colorData.colorHex)
 
+        // Обработка кликов через интерфейс, если установлен
+        holder.itemView.setOnClickListener {
+            cellClickListener?.onCellClickListener(colorData.colorName)
+
+            // Обработка кликов через лямбду, если установлена
+            onCellClick?.invoke(colorData.colorName)
+        }
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 }
+
 
