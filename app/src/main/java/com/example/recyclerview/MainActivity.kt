@@ -2,6 +2,7 @@ package com.example.recyclerview
 
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,7 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 
 data class ColorData(val colorName: String, val colorHex: Int)
 
-class MainActivity : AppCompatActivity() {
+interface CellClickListener {
+    fun onCellClickListener(colorName: String)
+}
+
+class MainActivity : AppCompatActivity(), CellClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -33,8 +38,20 @@ class MainActivity : AppCompatActivity() {
         )
 
         // Настраиваем RecyclerView
-        val recyclerView = findViewById<RecyclerView>(R.id.rView)
+        val recyclerView: RecyclerView;
+        recyclerView = findViewById<RecyclerView>(R.id.rView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = Adapter(this, colors)
+        if (false) {
+            recyclerView.adapter = Adapter(this, colors, this)
+        } else {
+            recyclerView.adapter = Adapter(this, colors) { colorName ->
+                Toast.makeText(this, "IT’S $colorName", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Реализуем метод интерфейса
+    override fun onCellClickListener(colorName: String) {
+        Toast.makeText(this, "IT’S $colorName", Toast.LENGTH_SHORT).show()
     }
 }
