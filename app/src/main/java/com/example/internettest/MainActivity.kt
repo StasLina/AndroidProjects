@@ -11,6 +11,8 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import okhttp3.*
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,5 +66,48 @@ class MainActivity : AppCompatActivity() {
                 }
             }.start()
         }
+
+        // Находим кнопку для OkHTTP
+        val btnOkHTTP: Button = findViewById(R.id.btnOkHTTP)
+
+        // Устанавливаем слушатель клика для кнопки "Get via OkHTTP"
+        btnOkHTTP.setOnClickListener {
+            // Запускаем асинхронный запрос через OkHTTP
+            fetchPhotosUsingOkHTTP()
+        }
+    }
+
+    // Функция для выполнения асинхронного запроса через OkHTTP
+    private fun fetchPhotosUsingOkHTTP() {
+        // Создаем клиент OkHTTP
+        val client = OkHttpClient()
+
+        // Указываем URL для запроса
+        val url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ff49fcd4d4a08aa6aafb6ea3de826464&tags=cat&format=json&nojsoncallback=1"
+
+        // Формируем запрос
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        // Асинхронный вызов
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Логируем ошибку в случае неудачного запроса
+                Log.e("Flickr OkCats", "Request Failed: ${e.message}")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    // Получаем тело ответа
+                    val responseBody = response.body?.string()
+                    // Логируем ответ на уровне INFO
+                    Log.i("Flickr OkCats", "Response: $responseBody")
+                } else {
+                    // Логируем код ошибки
+                    Log.e("Flickr OkCats", "Error: ${response.code}")
+                }
+            }
+        })
     }
 }
