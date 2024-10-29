@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -36,7 +38,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -45,10 +46,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("com.jakewharton.timber:timber:5.0.1")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.github.bumptech.glide:glide:4.9.0")
+    implementation(libs.timber)
+    implementation(libs.okhttp)
+    implementation(libs.gson)
+    implementation(libs.glide)
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
+}
 
-
+kapt {
+    correctErrorTypes = true // Убедитесь, что эта настройка включена
+    useBuildCache = true
 }

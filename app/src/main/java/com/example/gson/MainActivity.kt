@@ -5,11 +5,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import okhttp3.*
 import timber.log.Timber
+import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ActionOnResultSuccess {
+
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.plant(Timber.DebugTree()) // Инициализация Timber
+
+        Timber.v("Начало инициализации")
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
@@ -19,41 +30,25 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
+        Timber.v("Search RecycleView")
+        recyclerView = findViewById(R.id.rView)
+        // Иницилизируем адаптер
+        val adapter = Adapter()
+        recyclerView.adapter = adapter
+        Timber.v("Set adapter")
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
+
+        val apiInstance = API()
+        apiInstance.fetchPhotos(this)
     }
 
-    // Метод для получения данных через API
-    private fun fetchPhotos() {
-        val client = OkHttpClient()
-        val url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=ff49fcd4d4a08aa6aafb6ea3de826464&tags=cat&format=json&nojsoncallback=1"
-
-        val request = Request.Builder().url(url).build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Timber.e(e, "Request Failed")
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val json = response.body?.string()
-                if (response.isSuccessful && !json.isNullOrEmpty()) {
-                    parsePhotos(json)
-                }
-            }
-        })
-    }
-
-    // Метод для парсинга JSON и логирования каждого пятого объекта
-    private fun parsePhotos(json: String) {
+    override fun ActionOnResultSuccess(eventData: String) {
         val gson = Gson()
-        val wrapper = gson.fromJson(json, Wrapper::class.java)
+        val wrapper = gson.fromJson(eventData, Wrapper::class.java)
 
-        wrapper.photos.photo.forEachIndexed { index, photo ->
-            if ((index + 1) % 5 == 0) {
-                Timber.d("Every 5th photo: $photo")
-            }
+        runOnUiThread {
+            val adapter = (recyclerView.adapter as Adapter)
+            adapter.setPhotos(wrapper.photos.photo)
         }
     }
 }
