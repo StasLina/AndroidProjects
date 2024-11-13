@@ -1,5 +1,7 @@
 package com.example.gson
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.os.Bundle
@@ -18,6 +20,9 @@ import timber.log.Timber
 
 
 class PicViewer : AppCompatActivity() {
+
+    lateinit var photoData: Photo
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -38,6 +43,9 @@ class PicViewer : AppCompatActivity() {
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)  // Make sure `toolbar` exists in pic_viewer.xml
         this.setSupportActionBar(toolbar)
 
+        photoData = intent.getParcelableExtra("data")!!
+
+
         supportActionBar?.show()
     }
 
@@ -55,10 +63,18 @@ class PicViewer : AppCompatActivity() {
 
             item.icon = ContextCompat.getDrawable(this, R.drawable.star_svgrepo_com)
             Toast.makeText(this, "Добавлено в избранное", Toast.LENGTH_LONG).show()
+
+            val resultIntent = Intent()
+
+            // Передаем ссылку на картинку и информацию о добавлении в избранное
+            resultIntent.putExtra("imageUrl", photoData.getURI())  // Замените на реальный URL изображения
+            resultIntent.putExtra("isFavorite", true)  // Устанавливаем, что картинка добавлена в избранное
+
+            // Устанавливаем результат и завершаем Activity
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()  // Закрываем текущую Activity
             return true
         }
-
-
 
         return super.onOptionsItemSelected(item)
     }

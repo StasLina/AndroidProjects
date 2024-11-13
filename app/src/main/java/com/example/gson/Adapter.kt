@@ -3,27 +3,26 @@ package com.example.gson
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
-import kotlin.reflect.typeOf
 
-class Adapter() : RecyclerView.Adapter<Adapter.MyViewHolder>() {
-    //var photoList :List<Photo>
+class Adapter(
+    private val onImageClick: (image: ImageView, photoData: Photo) -> Unit
+) : RecyclerView.Adapter<Adapter.MyViewHolder>() {
     private var photoList = listOf<Photo>()
 
-    class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view),View.OnClickListener {
+    class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {//View.OnClickListener
         val imageView: ImageView = view.findViewById(R.id.imageView)
 
         // Переопределяем событие нажатия
-        public fun onImageClick(image: ImageView){
+        // Depracted
+        public fun onImageClick(image: ImageView, photoData: Photo){
             image.setImageDrawable(image.drawable)
             val bitmap = (image.drawable as BitmapDrawable).bitmap
             Timber.v("Click on Image")
@@ -37,15 +36,18 @@ class Adapter() : RecyclerView.Adapter<Adapter.MyViewHolder>() {
 
             val intent = Intent(view.context, PicViewer::class.java)
             intent.putExtra("picture", b)
+            intent.putExtra("data", photoData)
             view.context.startActivity(intent)
         }
 
+        /* Depracted
         override fun onClick(p0: View?) {
             if (p0 is ImageView) {
                 val image = p0 as ImageView;
                 onImageClick(image)
             }
         }
+        */
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -57,8 +59,8 @@ class Adapter() : RecyclerView.Adapter<Adapter.MyViewHolder>() {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Timber.v("onBindViewHolder")
         val photo = photoList[position]
-        val imageUrl =
-            "https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_z.jpg"
+        val imageUrl = photo.getURI()
+
 
         Timber.v("Loading image from URL: $imageUrl")
 
@@ -70,9 +72,13 @@ class Adapter() : RecyclerView.Adapter<Adapter.MyViewHolder>() {
             .into(holder.imageView) // Устанавливаем изображение в imageView
 
         // Добавляем событие OnClick
-        holder.imageView.setOnClickListener(holder)
-
+        //holder.imageView.setOnClickListener(holder)
+        holder.imageView.setOnClickListener{
+            //holder.onImageClick(holder.imageView,photo)
+            onImageClick(holder.imageView, photo)
+        }
     }
+
     override fun getItemCount(): Int {
         return photoList.size
     }
