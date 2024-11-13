@@ -28,7 +28,7 @@ data class Photo(
     val title: String
 ) : Parcelable {
 
-    // This will be used to reconstruct the object from a Parcel
+    // Десерилезуем объект из parcel
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
@@ -42,7 +42,7 @@ data class Photo(
         return  0;
     }
 
-    // This writes the object to the Parcel
+    // серилизуем объект Parcel
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
         parcel.writeString(owner)
@@ -52,7 +52,7 @@ data class Photo(
         parcel.writeString(title)
     }
 
-    // A static field to generate instances of your Parcelable class from a Parcel
+    // Требуется для серелизации
     companion object CREATOR : Parcelable.Creator<Photo> {
         override fun createFromParcel(parcel: Parcel): Photo {
             return Photo(parcel)

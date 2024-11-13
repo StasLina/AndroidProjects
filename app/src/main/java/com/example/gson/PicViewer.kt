@@ -40,7 +40,7 @@ class PicViewer : AppCompatActivity() {
         val image = findViewById<View>(R.id.FavoriteIcon) as ImageView
         image.setImageBitmap(bmp)
 
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)  // Make sure `toolbar` exists in pic_viewer.xml
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         this.setSupportActionBar(toolbar)
 
         photoData = intent.getParcelableExtra("data")!!
@@ -56,7 +56,7 @@ class PicViewer : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here.
+        // Обработка нажатий на картинку
         val id = item.getItemId()
 
         if (id == R.id.action_one) {
