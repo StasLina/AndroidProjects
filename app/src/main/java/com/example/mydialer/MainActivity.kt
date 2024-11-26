@@ -1,5 +1,7 @@
 package com.example.mydialer
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -21,6 +23,7 @@ import androidx.core.widget.addTextChangedListener
 class MainActivity : AppCompatActivity() {
     private lateinit var contactAdapter: ContactAdapter
     private lateinit var contacts: List<Contact>
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,24 +53,40 @@ class MainActivity : AppCompatActivity() {
         val recyclerView: RecyclerView = findViewById(R.id.rView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = contactAdapter
+        sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
 
         val searchEditText: EditText = findViewById(R.id.et_search)
 
+        // Восстановливаем фильтр из SharedPreferences
+        val savedFilter = sharedPreferences.getString("SEARCH_FILTER", "") ?: ""
+        searchEditText.setText(savedFilter)
+        filterContact(savedFilter)
+
+        // Добавляем слушатель
         searchEditText.addTextChangedListener()  {
             val query = searchEditText.text.toString()
-            val filteredContacts = if (query.isEmpty()) {
-                contacts
-            } else {
-                contacts.filter {
-                    it.name.contains(query, ignoreCase = true)
-                    ||it.phone.contains(query, ignoreCase = true) }
-            }
-            contactAdapter.filterContacts(filteredContacts)
+
+            sharedPreferences.edit()
+                .putString("SEARCH_FILTER", query)
+                .apply()
+
+            filterContact(query)
         }
 
 
     }
 
+    private fun filterContact(pattern: String) : List<Contact>{
+        val filteredContacts = if (pattern.isEmpty()) {
+            contacts
+        } else {
+            contacts.filter {
+                it.name.contains(pattern, ignoreCase = true)
+                        ||it.phone.contains(pattern, ignoreCase = true) }
+        }
+        contactAdapter.filterContacts(filteredContacts)
+        return  filteredContacts
+    }
 
     private fun loadJson(url: String) {
         val client = OkHttpClient()
