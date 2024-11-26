@@ -3,6 +3,7 @@ package com.example.mydialer
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +16,7 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.IOException
+import androidx.core.widget.addTextChangedListener
 
 class MainActivity : AppCompatActivity() {
     private lateinit var contactAdapter: ContactAdapter
@@ -49,18 +51,21 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = contactAdapter
 
-        val searchButton: Button = findViewById(R.id.btn_search)
         val searchEditText: EditText = findViewById(R.id.et_search)
 
-        searchButton.setOnClickListener {
+        searchEditText.addTextChangedListener()  {
             val query = searchEditText.text.toString()
             val filteredContacts = if (query.isEmpty()) {
                 contacts
             } else {
-                contacts.filter { it.name.contains(query, ignoreCase = true) }
+                contacts.filter {
+                    it.name.contains(query, ignoreCase = true)
+                    ||it.phone.contains(query, ignoreCase = true) }
             }
             contactAdapter.filterContacts(filteredContacts)
         }
+
+
     }
 
 
