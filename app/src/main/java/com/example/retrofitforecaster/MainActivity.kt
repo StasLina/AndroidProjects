@@ -18,6 +18,30 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
+interface IMemento{
+    fun isEquals(otherInstance: DataResponse) : Boolean
+    fun save(otherInstance: DataResponse)
+}
+val memento = object : IMemento{
+    var lastData : DataResponse? = null;
+
+
+    override fun isEquals(otherInstance: DataResponse) : Boolean{
+        if(lastData == null) return false;
+        return lastData == otherInstance;
+    }
+    // тип анонимных объектов - Any, поэтому `override` необходим в `toString()`
+    override fun toString() : String {
+        if(lastData == null) return "Данные не установлены"
+        val gson = Gson()
+        return gson.toJson(lastData)
+    }
+
+    override fun save(otherInstance: DataResponse) {
+        lastData = otherInstance;
+    }
+};
+
 class MainActivity : AppCompatActivity() {
 
 
@@ -45,10 +69,18 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val days = daysApi.check(BuildConfig.API_KEY_OPEN_WEATHER_MAP)
+            var d = days.body();
+            d?.let {
+                if (memento.isEquals(it)) {
+                        Timber.d("Данные совпадают")
+                }
+                else {
+                    memento.save(it)
+                    Timber.d(memento.toString())
+                }
+            }
 
-            // Серилизуем объект для серилизации
-            val gson = Gson()
-            Timber.d(gson.toJson(days.body()))
+            Timber.d(memento.toString())
             withContext(Dispatchers.Main) {
                 if (days.body() != null) {
                     val adapter = DayListAdapter()
