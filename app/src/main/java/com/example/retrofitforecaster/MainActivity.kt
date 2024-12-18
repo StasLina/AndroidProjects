@@ -22,30 +22,27 @@ interface IMemento{
     fun isEquals(otherInstance: DataResponse) : Boolean
     fun save(otherInstance: DataResponse)
 }
-val memento = object : IMemento{
-    var lastData : DataResponse? = null;
+val WeatherStore = object : IMemento{
+    var weathers : DataResponse? = null;
 
 
     override fun isEquals(otherInstance: DataResponse) : Boolean{
-        if(lastData == null) return false;
-        return lastData == otherInstance;
+        if(weathers == null) return false;
+        return weathers == otherInstance;
     }
     // тип анонимных объектов - Any, поэтому `override` необходим в `toString()`
     override fun toString() : String {
-        if(lastData == null) return "Данные не установлены"
+        if(weathers == null) return "Данные не установлены"
         val gson = Gson()
-        return gson.toJson(lastData)
+        return gson.toJson(weathers)
     }
 
     override fun save(otherInstance: DataResponse) {
-        lastData = otherInstance;
+        weathers = otherInstance;
     }
 };
 
 class MainActivity : AppCompatActivity() {
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -71,16 +68,15 @@ class MainActivity : AppCompatActivity() {
             val days = daysApi.check(BuildConfig.API_KEY_OPEN_WEATHER_MAP)
             var d = days.body();
             d?.let {
-                if (memento.isEquals(it)) {
-                        Timber.d("Данные совпадают")
+                if (WeatherStore.isEquals(it)) {
+                        Timber.d("Data equals")
                 }
                 else {
-                    memento.save(it)
-                    Timber.d(memento.toString())
+                    WeatherStore.save(it)
+                    Timber.d(WeatherStore.toString())
                 }
             }
 
-            Timber.d(memento.toString())
             withContext(Dispatchers.Main) {
                 if (days.body() != null) {
                     val adapter = DayListAdapter()
