@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -15,8 +16,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,6 +32,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        // Включаем Timber для логирования
+        Timber.plant(Timber.DebugTree())
 
         val rView: RecyclerView = findViewById(R.id.r_view)
         rView.layoutManager = LinearLayoutManager(this)
@@ -39,6 +46,9 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val days = daysApi.check(BuildConfig.API_KEY_OPEN_WEATHER_MAP)
 
+            // Серилизуем объект для серилизации
+            val gson = Gson()
+            Timber.d(gson.toJson(days.body()))
             withContext(Dispatchers.Main) {
                 if (days.body() != null) {
                     val adapter = DayListAdapter()
