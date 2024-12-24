@@ -1,6 +1,7 @@
 package com.example.gitchecker
 
 import android.R.attr.password
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -39,48 +40,53 @@ class MainActivity : AppCompatActivity() {
 
         // Устанавливаем слушатель клика на кнопку
         btnHTTP.setOnClickListener {
-            // Запускаем сетевое взаимодействие в другом потоке
-            Thread {
-                try {
-                    // Указываем URL для запроса
-//                    val url = URL("http://192.192.56.111:3000/api/v1/users/Stanislav/tokens")
-                    val url = URL("http://172.28.96.2:3000/api/v1/users/Stanislav/tokens")
-
-                    // Открываем соединение
-                    val urlConnection = url.openConnection() as HttpURLConnection
-                    urlConnection.requestMethod = "GET"
-
-                    // Устанавливаем Basic Authentication
-                    val username = "Stanislav"
-                    val password = "i2Ekbi9p.JYegiz"
-                    val auth = "$username:$password".toByteArray().toBase64() // Кодируем в Base64
-                    urlConnection.setRequestProperty("Authorization", "Basic $auth")
-
-                    // Получаем код ответа
-                    val responseCode = urlConnection.responseCode
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // Читаем поток данных
-                        val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
-                        val response = StringBuilder()
-                        var line: String?
-
-                        while (reader.readLine().also { line = it } != null) {
-                            response.append(line)
-                        }
-                        reader.close()
-
-                        // Логируем ответ
-                        Log.d("Flickr cats", "Response: $response")
-                    } else {
-                        Log.d("Flickr cats", "Error: $responseCode")
-                    }
-
-                    urlConnection.disconnect()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("Flickr cats", "Exception: ${e.message}")
-                }
-            }.start()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
+    }
+
+    fun dobby(){
+        // Запускаем сетевое взаимодействие в другом потоке
+        Thread {
+            try {
+                // Указываем URL для запроса
+//              val url = URL("http://192.192.56.111:3000/api/v1/users/Stanislav/tokens")
+                val url = URL("http://172.28.96.2:3000/api/v1/users/Stanislav/tokens")
+
+                // Открываем соединение
+                val urlConnection = url.openConnection() as HttpURLConnection
+                urlConnection.requestMethod = "GET"
+
+                // Устанавливаем Basic Authentication
+                val username = "Stanislav"
+                val password = "i2Ekbi9p.JYegiz"
+                val auth = "$username:$password".toByteArray().toBase64() // Кодируем в Base64
+                urlConnection.setRequestProperty("Authorization", "Basic $auth")
+
+                // Получаем код ответа
+                val responseCode = urlConnection.responseCode
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    // Читаем поток данных
+                    val reader = BufferedReader(InputStreamReader(urlConnection.inputStream))
+                    val response = StringBuilder()
+                    var line: String?
+
+                    while (reader.readLine().also { line = it } != null) {
+                        response.append(line)
+                    }
+                    reader.close()
+
+                    // Логируем ответ
+                    Log.d("Flickr cats", "Response: $response")
+                } else {
+                    Log.d("Flickr cats", "Error: $responseCode")
+                }
+
+                urlConnection.disconnect()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("Flickr cats", "Exception: ${e.message}")
+            }
+        }.start()
     }
 }
