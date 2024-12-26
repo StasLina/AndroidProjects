@@ -1,31 +1,35 @@
 package com.example.gitchecker
 
-import android.R.attr.password
+import android.app.Application
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import com.example.gitchecker.models.AppData
+import com.example.gitchecker.models.AppDataMain
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.Base64
 
-
 class MainActivity : AppCompatActivity() {
-
     fun ByteArray.toBase64(): String =
         String(Base64.getEncoder().encode(this))
 
+    private val appData: AppData by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Log.d("dag","Value detect23 = ${appData.data.getProtocol()}")
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
