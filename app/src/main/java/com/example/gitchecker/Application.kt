@@ -12,8 +12,6 @@ class MyApplication : Application() {
         super.onCreate()
         appData = AppDataMain()
         Log.d("dag","Value detect21323 = ${appData}")
-
-
     }
 
     fun GetData() : AppDataMain {return appData}

@@ -25,6 +25,7 @@ import com.example.gitchecker.api.ApiService
 import com.example.gitchecker.api.fetchUserData
 
 import com.example.gitchecker.models.AppData
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -179,6 +180,10 @@ class LoginActivity : AppCompatActivity() {
                             ).show()
                             //}
                             Log.d("LoginActivity", "Autorize success ${user.loginName}")
+                            Log.d("LoginActivity", "User data: ${Gson().toJson(user)}")
+                            appData.data.userData = user;
+                            val intent = android.content.Intent(this@LoginActivity, CommonActivity::class.java)
+                            startActivity(intent)
                         },
                         onError = { errorMessage ->
                             //withContext(Dispatchers.Main) {

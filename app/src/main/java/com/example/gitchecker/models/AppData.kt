@@ -3,6 +3,7 @@ package com.example.gitchecker.models
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.example.gitchecker.MyApplication
+import com.example.gitchecker.api.UserResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -12,6 +13,8 @@ class AppData (application: Application) : AndroidViewModel(application) {
 }
 
 class AppDataMain  {
+    var userData: UserResponse? = null
+
 //    private  var protocol: String? = null
 //    fun setProtocol(protocol: String) {
 //        this.protocol = protocol
