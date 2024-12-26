@@ -10,7 +10,6 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
@@ -22,8 +21,8 @@
 
         <ImageView
             android:id="@+id/Close"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/arrow_back_svgrepo_com"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"></ImageView>
@@ -85,7 +84,7 @@
                 android:id="@+id/SaveClick"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Войти"></Button>
+                android:text="Сохранить"></Button>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

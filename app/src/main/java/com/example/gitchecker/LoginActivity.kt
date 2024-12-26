@@ -5,7 +5,6 @@ import android.os.Parcelable
 import androidx.lifecycle.ViewModel
 
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -21,9 +20,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.example.gitchecker.api.ApiClient
+import com.example.gitchecker.api.ApiService
+import com.example.gitchecker.api.fetchUserData
 
 import com.example.gitchecker.models.AppData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.log
 
 class LoginViewModel() : ViewModel() {
@@ -74,13 +79,13 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch{
-                appData.dataHard.password.collect { password ->
-                    password?.takeIf { it.isNotEmpty() }?.let {
-                        Log.d("LoginActivity", "finded password: $it")
-                        loginViewMode.setPassword(it)
-                    }
+        lifecycleScope.launch {
+            appData.dataHard.password.collect { password ->
+                password?.takeIf { it.isNotEmpty() }?.let {
+                    Log.d("LoginActivity", "finded password: $it")
+                    loginViewMode.setPassword(it)
                 }
+            }
         }
 
         val btnLogin: Button = findViewById(R.id.LoginClick)
@@ -98,13 +103,14 @@ class LoginActivity : AppCompatActivity() {
 //            loginViewMode.setPassword(it.toString())
 //        }
 
-        btnLogin.setOnClickListener{
+        btnLogin.setOnClickListener {
+            // Запускаем одну корутину для выполнения всех шагов последовательно
             lifecycleScope.launch {
                 try {
-
+                    // Сохраняем данные авторизации
                     val loginView: TextView = findViewById(R.id.login)
                     val passwordView: TextView = findViewById(R.id.password)
-//
+
                     loginViewMode.setLogin(loginView.text.toString())
                     loginViewMode.setPassword(passwordView.text.toString())
 
@@ -120,42 +126,150 @@ class LoginActivity : AppCompatActivity() {
                         appData.dataHard.savePassword(it)
                     } ?: Log.d("LoginActivity", "Password is empty or null, not saving.")
 
-                } catch (e: Exception) {  // Используйте Exception для захвата любых ошибок
-                    Log.e("LoginActivity", "Error occurred: ${e.message}", e)
+                    // Проверяем установку пароля
+                    Log.d("LoginActivity", "CheckUpdate: Password_")
+                    val passwordValue = appData.dataHard.password.first() // { passwordValue ->
+                        passwordValue?.let {
+                            Log.d("LoginActivity", "Getting password: $it")
+                        } ?: Log.d("LoginActivity", "Password not set or empty")
+//                    }
+
+                    // Проверяем установку логина
+                    Log.d("LoginActivity", "CheckUpdate: Login")
+                    val loginValue = appData.dataHard.login.first() // { loginValue ->
+                        loginValue?.let {
+                            Log.d("LoginActivity", "Getting login: $it")
+                        } ?: Log.d("LoginActivity", "Login not set or empty")
+//                    }
+
+                    // Выполняем авторизацию через API
+                    val apiClient = ApiClient()
+                    Log.d("LoginActivity", "Calling getConnectionParams")
+                    val conParams = getConnectionParams()
+
+                    Log.d("LoginActivity", "Calling getClient")
+                    val retrofit = apiClient.getClient(
+                        protocol = conParams[0], // "http",
+                        address = conParams[1], // "192.192.56.111:3000",
+                        path = "api/v1/",
+                        username = conParams[2], // "Stanislav",
+                        password = conParams[3] // "i2Ekbi9p.JYegiz"
+                    )
+
+//
+//                    val retrofit = apiClient.getClient(
+//                        protocol = "http", // "http",
+//                        address ="192.192.56.111:3000", // "192.192.56.111:3000",
+//                        path = "api/v1/",
+//                        username = "Stanislav", // "Stanislav",
+//                        password = "i2Ekbi9p.JYegiz"// "i2Ekbi9p.JYegiz"
+//                    )
+
+                    Log.d("LoginActivity", "Create api service")
+                    val apiService = retrofit.create(ApiService::class.java)
+
+                    Log.d("LoginActivity", "Calling fetchUserData")
+                    fetchUserData(apiService,
+                        onSuccess = { user ->
+                            //withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@LoginActivity, // Правильный контекст
+                                "Успешная авторизация!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            //}
+                            Log.d("LoginActivity", "Autorize success ${user.loginName}")
+                        },
+                        onError = { errorMessage ->
+                            //withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@LoginActivity, // Правильный контекст
+                                "Логин или пароль не верны!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            Toast.makeText(
+                                this@LoginActivity, // Правильный контекст
+                                errorMessage,
+                                Toast.LENGTH_LONG
+                            ).show()
+                            //}
+                        }
+                    )
+                } catch (ex: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@LoginActivity, // Правильный контекст
+                            ex.message ?: "Произошла ошибка",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    Log.e("LoginActivity", "Error occurred: ${ex.message}", ex)
                 }
             }
 
-            // Проверяем установку
-            lifecycleScope.launch {
-                Log.d("LoginActivity", "CheckUpdate")
-                appData.dataHard.password.collect { passwordValue ->
-                    passwordValue?.let {
-                        Log.d("LoginActivity", "Getting password: $it")
-                    } ?: Log.d("LoginActivity", "password not set or empty")
-                }
+            // Обработчики кликов для других кнопок
+            btnSettings.setOnClickListener {
+                val intent = Intent(this@LoginActivity, SettingsActivity::class.java)
+                startActivity(intent)
             }
 
-            lifecycleScope.launch {
-                Log.d("LoginActivity", "CheckUpdate")
-                appData.dataHard.login.collect { loginValue ->
-                    loginValue?.let {
-                        Log.d("LoginActivity", "Getting login: $it")
-                    } ?: Log.d("LoginActivity", "Login not set or empty")
-                }
+            bExit.setOnClickListener {
+                Toast.makeText(this@LoginActivity, "Выходим!", Toast.LENGTH_SHORT).show()
+                finish()
             }
-
-
-            Toast.makeText(this, "Логин или пароль не верны!", Toast.LENGTH_SHORT).show();
         }
+    }
 
-        btnSettings.setOnClickListener{
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
+    // Так точно не надо делать получается каша
+    suspend fun getConnectionParams(
+    ): Array<String> {
 
-        bExit.setOnClickListener{
-            Toast.makeText(this, "Выходим!", Toast.LENGTH_SHORT).show();
-            finish()
-        }
+        var protocol = "";
+        var address = "";
+        var username = "";
+        var password = "";
+
+//        lifecycleScope.launch {
+        Log.d("LoginActivity", "CheckUpdate")
+        val passwordValue = appData.dataHard.password.first()
+        passwordValue?.let {
+            Log.d("LoginActivity", "Getting password: $it")
+            password = it;
+        } ?: Log.d("LoginActivity", "password not set or empty")
+
+//        }
+//        lifecycleScope.launch {
+        Log.d("LoginActivity", "CheckUpdate")
+        val loginValue = appData.dataHard.login.first()
+        loginValue?.let {
+            Log.d("LoginActivity", "Getting login: $it")
+            username = it;
+        } ?: Log.d("LoginActivity", "Login not set or empty")
+
+//        }
+
+//        lifecycleScope.launch {
+        Log.d("LoginActivity", "CheckUpdate")
+        val addressValue = appData.dataHard.address.first() // { passwordValue ->
+        addressValue?.let {
+                Log.d("LoginActivity", "Getting address: $it")
+                address = it;
+            } ?: Log.d("LoginActivity", "password not set or empty")
+
+//        }
+//        }
+//        lifecycleScope.launch {
+//
+        Log.d("LoginActivity", "CheckUpdate")
+        var  protocolValue = appData.dataHard.protocol.first()// { loginValue ->
+        protocolValue?.let {
+                Log.d("LoginActivity", "Getting protocol: $it")
+                protocol = it;
+        } ?: Log.d("LoginActivity", "Login not set or empty")
+//        }
+//        }
+
+        Log.d("LoginActivity", "Login data ${protocol} ${address} ${username}")
+        return arrayOf(protocol, address, username, password)
     }
 }
