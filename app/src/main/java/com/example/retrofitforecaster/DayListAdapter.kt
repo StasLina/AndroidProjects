@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.retrofitforecaster.Utils.WhetherUtils
+import com.example.retrofitforecaster.whether.DayPrognosis
 
 const val VIEW_TYPE_HOT = 0;
 const val VIEW_TYPE_COLD = 1;
 
-class DayListAdapter : ListAdapter<DayPrognosis, RecyclerView.ViewHolder>(DayDiffCallback()) {
-
+class DayListAdapter(private var whetherUtils : WhetherUtils) : ListAdapter<DayPrognosis, RecyclerView.ViewHolder>(DayDiffCallback()) {
     inner class DayViewHolderHot(view: View) : RecyclerView.ViewHolder(view) {
         val datetime: TextView = view.findViewById(R.id.datetime)
         val plusTxt: TextView = view.findViewById(R.id.txt_plus_temperature)
@@ -22,7 +23,7 @@ class DayListAdapter : ListAdapter<DayPrognosis, RecyclerView.ViewHolder>(DayDif
 
         fun bind(day: DayPrognosis) {
             datetime.text = day.dt_txt
-            plusTxt.text = day.main.getTempAsString()
+            plusTxt.text = whetherUtils.getTemperatureAsString(day.main.temp)
             val iconUrl = "https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"
             Glide.with(icon).load(iconUrl).into(icon)
         }
@@ -35,7 +36,7 @@ class DayListAdapter : ListAdapter<DayPrognosis, RecyclerView.ViewHolder>(DayDif
 
         fun bind(day: DayPrognosis) {
             datetime.text = day.dt_txt
-            minusTxt.text = day.main.getTempAsString()
+            minusTxt.text = whetherUtils.getTemperatureAsString(day.main.temp);
             val iconUrl = "https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png"
             Glide.with(icon).load(iconUrl).into(icon)
         }

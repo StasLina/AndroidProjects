@@ -1,16 +1,11 @@
-package com.example.retrofitforecaster
+package com.example.retrofitforecaster.whether
 
 import com.google.gson.annotations.SerializedName
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 // Data class for temperature
 data class Main(
     @SerializedName("temp") val temp: Double
-) {
-    fun getTempAsString(): String = "${temp}° C"
-}
+)
 
 // Data class for weather
 data class Weather(
@@ -30,8 +25,25 @@ data class DataResponse(
     @SerializedName("list") val list: ArrayList<DayPrognosis>
 )
 
-// Retrofit interface to fetch the forecast data
-interface DayGetter {
-    @GET("forecast?q=Shklov,by&units=metric")
-    suspend fun check(@Query("appid") apiKey: String): Response<DataResponse>
-}
+data class Coord (
+    val lon: Double,
+    val lat: Double
+)
+data class City(
+    val id: Int,
+    val name: String,
+    val coord: Coord,
+    val country: String,
+    val population: Int,
+    val timezone: Int,
+    val sunrise: Long,
+    val sunset: Long
+)
+
+data class WeatherForecastResponse(
+    val cod: String,
+    val message: Int,
+    val cnt: Int,
+    val list: ArrayList<DayPrognosis>,
+    val city: City
+)
