@@ -85,13 +85,6 @@ class MainActivity : AppCompatActivity() {
                 body?.let {
                     Timber.d(it.toString())
                     viewModel.setSelectedData(it)
-//                    if (viewModel.getWeatherStore.isEquals(it)) {
-//                        Timber.d("Data equals")
-//                        Toast.makeText(context, "Список не изменился", Toast.LENGTH_SHORT).show()
-//                    } else {
-//                        viewModel.getWeatherStore.save(it)
-//                        Timber.d(viewModel.getWeatherStore.toString())
-//                    }
                 }
             } else {
                 // Обработка ошибок

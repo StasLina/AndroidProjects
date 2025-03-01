@@ -22,30 +22,26 @@ class CharacterAdapter : ListAdapter<Character, RecyclerView.ViewHolder>(Charact
     }
 
     inner class HumanViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.findViewById(R.id.smthText);
-        val textAdd: TextView = itemView.findViewById(R.id.addText)
+        val textView: TextView = view.findViewById(R.id.peopleName);
+        val image: ImageView= itemView.findViewById(R.id.peopleImage)
 
         fun bind(character: Character) {
             textView.text = character.name;
-            textAdd.text = character.species
+            Glide.with(image).load(character.image).into(image)
         }
     }
     inner class AlienViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.findViewById(R.id.smthText)
-        val textAdd: TextView = itemView.findViewById(R.id.addText)
+        val textView: TextView = view.findViewById(R.id.heroName)
 
         fun bind(character: Character) {
             textView.text = character.name;
-            textAdd.text = character.species
         }
     }
     inner class OtherViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.findViewById(R.id.smthText)
-        val textAdd: TextView = itemView.findViewById(R.id.addText)
+        val textView: TextView = view.findViewById(R.id.heroType)
 
         fun bind(character: Character) {
-            textView.text = character.name;
-            textAdd.text = character.species
+            textView.text = character.species;
         }
     }
 
@@ -65,13 +61,13 @@ class CharacterAdapter : ListAdapter<Character, RecyclerView.ViewHolder>(Charact
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             VIEW_TYPE_HUMAN -> {
-                return HumanViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.r_item, parent, false))
+                return HumanViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.r_item_human, parent, false))
             }
             VIEW_TYPE_OTHER -> {
-                return AlienViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.r_item, parent, false))
+                return AlienViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.r_item_alien, parent, false))
             }
         }
-        return OtherViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.r_item, parent, false))
+        return OtherViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.r_item_other, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
