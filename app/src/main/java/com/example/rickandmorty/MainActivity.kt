@@ -9,8 +9,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rickandmorty.API.IRickAndMortyApi
-import com.example.rickandmorty.API.RetrofitHelper
+import com.example.rickandmorty.api.IRickAndMortyApi
+import com.example.rickandmorty.api.RetrofitHelper
 import com.example.rickandmorty.databinding.ActivityMainBinding
 import com.example.rickandmorty.models.MainViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler

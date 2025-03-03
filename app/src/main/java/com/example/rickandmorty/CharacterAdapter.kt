@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.rickandmorty.API.Character
-import com.example.rickandmorty.API.CharacterResponse
+import com.example.rickandmorty.api.Character
 import timber.log.Timber
 
 

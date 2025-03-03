@@ -3,7 +3,7 @@ package com.example.rickandmorty.models
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.rickandmorty.API.CharacterResponse
+import com.example.rickandmorty.api.CharacterResponse
 
 class MainViewModel : ViewModel() {
     private var _selectionData : MutableLiveData<CharacterResponse> = MutableLiveData<CharacterResponse>()

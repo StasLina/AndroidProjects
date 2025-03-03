@@ -1,4 +1,4 @@
-package com.example.rickandmorty.API
+package com.example.rickandmorty.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
