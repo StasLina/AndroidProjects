@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.example.rickandmorty.api.Character
 import timber.log.Timber
 
-
 class CharacterAdapter : ListAdapter<Character, RecyclerView.ViewHolder>(CharacterDiffUtil()) {
     companion object {
         const val VIEW_TYPE_HUMAN = 0;
