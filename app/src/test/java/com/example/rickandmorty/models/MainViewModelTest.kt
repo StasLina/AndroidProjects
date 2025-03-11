@@ -116,9 +116,55 @@ class MainViewModelTest {
         viewModel.getErrorMessage.removeObserver(observer)
     }
 
+
     @Test
-    fun `test error handling on unsuccessful response`() = runBlockingTest {
-        val errorMessage = "Lorem Ipsum"
+    fun `test error handling on 400 response`() = runBlockingTest {
+        val errorMessage = "Неверный запрос"
+        val response = Response.error<CharacterResponse>(400, ResponseBody.create(null, errorMessage))
+        `when`(characterRepository.getCharacter()).thenReturn(response)
+
+        viewModel.loadRickAndMortyItems()
+
+        val observer = Observer<String> {}
+        viewModel.getErrorMessage.observeForever(observer)
+        assertEquals(MainViewModel.HTTP400, viewModel.getErrorMessage.value)
+        verify(characterRepository).getCharacter()
+        viewModel.getErrorMessage.removeObserver(observer)
+    }
+
+    @Test
+    fun `test error handling on 401 response`() = runBlockingTest {
+        val errorMessage = "Неавторизован"
+        val response = Response.error<CharacterResponse>(401, ResponseBody.create(null, errorMessage))
+        `when`(characterRepository.getCharacter()).thenReturn(response)
+
+        viewModel.loadRickAndMortyItems()
+
+        val observer = Observer<String> {}
+        viewModel.getErrorMessage.observeForever(observer)
+        assertEquals(MainViewModel.HTTP401, viewModel.getErrorMessage.value)
+        verify(characterRepository).getCharacter()
+        viewModel.getErrorMessage.removeObserver(observer)
+    }
+
+    @Test
+    fun `test error handling on 403 response`() = runBlockingTest {
+        val errorMessage = "Доступ запрещен"
+        val response = Response.error<CharacterResponse>(403, ResponseBody.create(null, errorMessage))
+        `when`(characterRepository.getCharacter()).thenReturn(response)
+
+        viewModel.loadRickAndMortyItems()
+
+        val observer = Observer<String> {}
+        viewModel.getErrorMessage.observeForever(observer)
+        assertEquals(MainViewModel.HTTP403, viewModel.getErrorMessage.value)
+        verify(characterRepository).getCharacter()
+        viewModel.getErrorMessage.removeObserver(observer)
+    }
+
+    @Test
+    fun `test error handling on unsuccessful 404 response`() = runBlockingTest {
+        val errorMessage = "404 Lorem Ipsum"
         val response = Response.error<CharacterResponse>(404, ResponseBody.create(null, errorMessage))
         `when`(characterRepository.getCharacter()).thenReturn(response)
 
@@ -130,7 +176,49 @@ class MainViewModelTest {
         verify(characterRepository).getCharacter()
         viewModel.getErrorMessage.removeObserver(observer)
     }
+    @Test
+    fun `test error handling on 500 response`() = runBlockingTest {
+        val errorMessage = "Внутренняя ошибка сервера"
+        val response = Response.error<CharacterResponse>(500, ResponseBody.create(null, errorMessage))
+        `when`(characterRepository.getCharacter()).thenReturn(response)
 
+        viewModel.loadRickAndMortyItems()
+
+        val observer = Observer<String> {}
+        viewModel.getErrorMessage.observeForever(observer)
+        assertEquals(MainViewModel.HTTP500, viewModel.getErrorMessage.value)
+        verify(characterRepository).getCharacter()
+        viewModel.getErrorMessage.removeObserver(observer)
+    }
+
+    @Test
+    fun `test error handling on 503 response`() = runBlockingTest {
+        val errorMessage = "Сервис недоступен"
+        val response = Response.error<CharacterResponse>(503, ResponseBody.create(null, errorMessage))
+        `when`(characterRepository.getCharacter()).thenReturn(response)
+
+        viewModel.loadRickAndMortyItems()
+
+        val observer = Observer<String> {}
+        viewModel.getErrorMessage.observeForever(observer)
+        assertEquals(MainViewModel.HTTP503, viewModel.getErrorMessage.value)
+        verify(characterRepository).getCharacter()
+        viewModel.getErrorMessage.removeObserver(observer)
+    }
+
+    @Test
+    fun `test error handling on unknown response code`() = runBlockingTest {
+        val response = Response.error<CharacterResponse>(999, ResponseBody.create(null, "Unknown error"))
+        `when`(characterRepository.getCharacter()).thenReturn(response)
+
+        viewModel.loadRickAndMortyItems()
+
+        val observer = Observer<String> {}
+        viewModel.getErrorMessage.observeForever(observer)
+        assertEquals("Ошибка 999: Неизвестная ошибка", viewModel.getErrorMessage.value)
+        verify(characterRepository).getCharacter()
+        viewModel.getErrorMessage.removeObserver(observer)
+    }
     @Test
     fun `test UI update on successful data retrieval`() = runBlockingTest {
         val mockResponse = testCharacterResponse
