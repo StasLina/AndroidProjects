@@ -1,8 +1,8 @@
 package com.example.rickandmorty.di
 
-import com.example.rickandmorty.api.IRickAndMortyApi
-import com.example.rickandmorty.api.RetrofitHelper
+import com.example.rickandmorty.api.*
 import com.example.rickandmorty.models.CharacterRepository
+import com.example.rickandmorty.models.ICharacterRepository
 import com.example.rickandmorty.models.MainViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -16,13 +16,19 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApiService(): IRickAndMortyApi {
-        return RetrofitHelper.getInstance().create(IRickAndMortyApi::class.java)
+        return RickAndMortyApi.RetrofitHelper.getInstance().create(IRickAndMortyApi::class.java)
     }
 
     @Provides
     @Singleton
     fun provideCharacterRepository(apiService: IRickAndMortyApi): CharacterRepository {
         return CharacterRepository(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideICharacterRepository(characterRepository: CharacterRepository): ICharacterRepository {
+        return characterRepository
     }
 
     @Provides

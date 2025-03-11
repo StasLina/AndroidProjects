@@ -73,6 +73,25 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.55")
 }
 
+dependencies {
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("org.mockito:mockito-core:4.6.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("io.mockk:mockk:1.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // тесты view model
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    testImplementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+
+    // тесты корутин
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+}
+
+
 buildscript {
     repositories {
         google()
