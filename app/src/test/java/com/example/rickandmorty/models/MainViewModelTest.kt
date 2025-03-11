@@ -21,6 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.*
+import org.mockito.kotlin.mock
 import retrofit2.Response
 
 // Тестовые данные для Info
@@ -219,6 +220,7 @@ class MainViewModelTest {
         verify(characterRepository).getCharacter()
         viewModel.getErrorMessage.removeObserver(observer)
     }
+
     @Test
     fun `test UI update on successful data retrieval`() = runBlockingTest {
         val mockResponse = testCharacterResponse
@@ -227,13 +229,14 @@ class MainViewModelTest {
 
         viewModel.loadRickAndMortyItems()
 
-        val observer = Observer<CharacterResponse> {}
+        // для проверки что изменилось значения
+        val observer = mock<Observer<CharacterResponse>>()
+
         viewModel.getSelectionData.observeForever(observer)
-        assertEquals(mockResponse, viewModel.getSelectionData.value)
+        verify(observer).onChanged(mockResponse) // Проверяем, что observer был вызван с правильными данными
+        assertEquals(mockResponse, viewModel.getSelectionData.value) // Проверяем значение LiveData
         viewModel.getSelectionData.removeObserver(observer)
     }
-
-
 }
 
 @ExperimentalCoroutinesApi
