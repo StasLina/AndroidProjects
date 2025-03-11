@@ -233,6 +233,30 @@ class MainViewModelTest {
         viewModel.getSelectionData.removeObserver(observer)
     }
 
+
+}
+
+@ExperimentalCoroutinesApi
+class MainViewModelTestAsync {
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var viewModel: MainViewModel
+    private lateinit var characterRepository: ICharacterRepository
+    private val testDispatcher = StandardTestDispatcher()
+
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(testDispatcher)
+        characterRepository = mock(ICharacterRepository::class.java)
+        viewModel = MainViewModel(characterRepository)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain() // сбросить главный диспетчер
+    }
+
     @Test
     fun `test coroutine cancellation on ViewModel destruction`() = runBlockingTest {
         val mockResponse = testCharacterResponse
@@ -241,7 +265,13 @@ class MainViewModelTest {
 
         viewModel.loadRickAndMortyItems()
 
+        advanceUntilIdle()
+
         viewModel.onCleared()
-        verify(characterRepository).getCharacter()
+
+        // проверяем что не вызвался ни разу
+        verify(characterRepository, never()).getCharacter()
+
+        assertNull(viewModel.getSelectionData.value)
     }
 }

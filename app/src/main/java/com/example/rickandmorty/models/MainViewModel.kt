@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rickandmorty.api.CharacterResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
@@ -16,6 +17,7 @@ import retrofit2.Response
 class MainViewModel @Inject constructor(
     private val characterRepository: ICharacterRepository
 ) : ViewModel() {
+    private var job: Job? = null
 
     companion object {
         const val HTTP400 = "Ошибка 400: Неверный запрос"
@@ -33,7 +35,9 @@ class MainViewModel @Inject constructor(
     val getErrorMessage: LiveData<String> get() = _errorMessage
 
     fun loadRickAndMortyItems() {
-        viewModelScope.launch {
+        job?.cancel()
+
+        job = viewModelScope.launch {
             try {
                 val response: Response<CharacterResponse> = characterRepository.getCharacter()
                 if (response.isSuccessful) {
@@ -61,6 +65,7 @@ class MainViewModel @Inject constructor(
 
     public override fun onCleared() {
         super.onCleared()
+        job?.cancel()
     }
 }
 
