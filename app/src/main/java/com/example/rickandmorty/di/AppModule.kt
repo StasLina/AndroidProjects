@@ -16,7 +16,6 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApiService(): IRickAndMortyApi {
-        // Создание и возврат экземпляра ApiService
         return RetrofitHelper.getInstance().create(IRickAndMortyApi::class.java)
     }
 

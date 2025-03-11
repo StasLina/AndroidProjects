@@ -6,16 +6,10 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.rickandmorty.api.IRickAndMortyApi
-import com.example.rickandmorty.api.RetrofitHelper
 import com.example.rickandmorty.databinding.ActivityMainBinding
-import com.example.rickandmorty.models.CharacterRepository
 import com.example.rickandmorty.models.MainViewModel
-import com.example.rickandmorty.models.MainViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.rickandmorty.api.CharacterResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 
 

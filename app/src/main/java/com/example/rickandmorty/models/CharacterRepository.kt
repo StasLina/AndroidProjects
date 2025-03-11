@@ -11,5 +11,4 @@ class CharacterRepository @Inject constructor(
     suspend fun getCharacter(): Response<CharacterResponse> {
         return apiService.getCharacters()
     }
-
 }
