@@ -30,10 +30,4 @@ object AppModule {
     fun provideICharacterRepository(characterRepository: CharacterRepository): ICharacterRepository {
         return characterRepository
     }
-
-//    @Provides
-//    @Singleton
-//    fun provideMainViewModelFactory(characterRepository: CharacterRepository): MainViewModelFactory {
-//        return MainViewModelFactory(characterRepository)
-//    }
 }
