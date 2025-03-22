@@ -8,7 +8,6 @@ package com.example.rickandmorty.models
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.rickandmorty.api.*
-import com.example.rickandmorty.models.CharacterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -23,48 +22,6 @@ import org.junit.Test
 import org.mockito.Mockito.*
 import org.mockito.kotlin.mock
 import retrofit2.Response
-
-// Тестовые данные для Info
-val testInfo = Info(
-    count = 826,
-    pages = 42,
-    next = "https://rickandmortyapi.com/api/character?page=2",
-    prev = null
-)
-
-// Тестовые данные для Origin
-val testOrigin = Origin(
-    name = "Earth",
-    url = "https://rickandmortyapi.com/api/location/1"
-)
-
-// Тестовые данные для Location
-val testLocation = Location(
-    name = "Earth",
-    url = "https://rickandmortyapi.com/api/location/1"
-)
-
-// Тестовые данные для Character
-val testCharacter = Character(
-    id = 1,
-    name = "Rick Sanchez",
-    status = "Alive",
-    species = "Human",
-    type = "",
-    gender = "Male",
-    origin = testOrigin,
-    location = testLocation,
-    image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-    episode = listOf("https://rickandmortyapi.com/api/episode/1"),
-    url = "https://rickandmortyapi.com/api/character/1",
-    created = "2017-11-04T18:48:46.250Z"
-)
-
-// Тестовые данные для CharacterResponse
-val testCharacterResponse = CharacterResponse(
-    info = testInfo,
-    results = listOf(testCharacter) // Можно добавить больше персонажей в список
-)
 
 @ExperimentalCoroutinesApi
 class MainViewModelTest {
@@ -89,7 +46,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test check API response`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_successfulResponse`() = runBlockingTest {
         val mockResponse = testCharacterResponse
         val response = Response.success(mockResponse)
         `when`(characterRepository.getCharacter()).thenReturn(response)
@@ -105,7 +62,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test error handling on network failure`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_networkFailure`() = runBlockingTest {
         `when`(characterRepository.getCharacter()).thenThrow(RuntimeException("Network Error"))
 
         viewModel.loadRickAndMortyItems()
@@ -119,7 +76,7 @@ class MainViewModelTest {
 
 
     @Test
-    fun `test error handling on 400 response`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_error400`() = runBlockingTest {
         val errorMessage = "Неверный запрос"
         val response = Response.error<CharacterResponse>(400, ResponseBody.create(null, errorMessage))
         `when`(characterRepository.getCharacter()).thenReturn(response)
@@ -134,7 +91,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test error handling on 401 response`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_error401`() = runBlockingTest {
         val errorMessage = "Неавторизован"
         val response = Response.error<CharacterResponse>(401, ResponseBody.create(null, errorMessage))
         `when`(characterRepository.getCharacter()).thenReturn(response)
@@ -149,7 +106,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test error handling on 403 response`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_error403`() = runBlockingTest {
         val errorMessage = "Доступ запрещен"
         val response = Response.error<CharacterResponse>(403, ResponseBody.create(null, errorMessage))
         `when`(characterRepository.getCharacter()).thenReturn(response)
@@ -164,7 +121,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test error handling on unsuccessful 404 response`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_error404`() = runBlockingTest {
         val errorMessage = "404 Lorem Ipsum"
         val response = Response.error<CharacterResponse>(404, ResponseBody.create(null, errorMessage))
         `when`(characterRepository.getCharacter()).thenReturn(response)
@@ -177,8 +134,9 @@ class MainViewModelTest {
         verify(characterRepository).getCharacter()
         viewModel.getErrorMessage.removeObserver(observer)
     }
+
     @Test
-    fun `test error handling on 500 response`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_error500`() = runBlockingTest {
         val errorMessage = "Внутренняя ошибка сервера"
         val response = Response.error<CharacterResponse>(500, ResponseBody.create(null, errorMessage))
         `when`(characterRepository.getCharacter()).thenReturn(response)
@@ -193,7 +151,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test error handling on 503 response`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_error503`() = runBlockingTest {
         val errorMessage = "Сервис недоступен"
         val response = Response.error<CharacterResponse>(503, ResponseBody.create(null, errorMessage))
         `when`(characterRepository.getCharacter()).thenReturn(response)
@@ -208,7 +166,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test error handling on unknown response code`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_unknownError`() = runBlockingTest {
         val response = Response.error<CharacterResponse>(999, ResponseBody.create(null, "Unknown error"))
         `when`(characterRepository.getCharacter()).thenReturn(response)
 
@@ -222,7 +180,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `test UI update on successful data retrieval`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_uiUpdateOnSuccess`() = runBlockingTest {
         val mockResponse = testCharacterResponse
         val response = Response.success(mockResponse)
         `when`(characterRepository.getCharacter()).thenReturn(response)
@@ -261,7 +219,7 @@ class MainViewModelTestAsync {
     }
 
     @Test
-    fun `test coroutine cancellation on ViewModel destruction`() = runBlockingTest {
+    fun `characterRepository_loadRickAndMortyItems_viewModelDestruction`() = runBlockingTest {
         val mockResponse = testCharacterResponse
         val response = Response.success(mockResponse)
         `when`(characterRepository.getCharacter()).thenReturn(response)

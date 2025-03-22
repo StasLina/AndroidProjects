@@ -31,9 +31,9 @@ object AppModule {
         return characterRepository
     }
 
-    @Provides
-    @Singleton
-    fun provideMainViewModelFactory(characterRepository: CharacterRepository): MainViewModelFactory {
-        return MainViewModelFactory(characterRepository)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideMainViewModelFactory(characterRepository: CharacterRepository): MainViewModelFactory {
+//        return MainViewModelFactory(characterRepository)
+//    }
 }

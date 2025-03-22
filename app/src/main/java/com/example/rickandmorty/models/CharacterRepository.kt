@@ -9,7 +9,6 @@ interface ICharacterRepository {
     suspend fun getCharacter(): Response<CharacterResponse>
 }
 
-
 class CharacterRepository @Inject constructor(
     private val apiService: IRickAndMortyApi
 ) :  ICharacterRepository {

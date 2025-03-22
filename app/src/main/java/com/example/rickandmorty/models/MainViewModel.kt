@@ -9,8 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 import kotlinx.coroutines.launch
-
-
 import retrofit2.Response
 
 @HiltViewModel
