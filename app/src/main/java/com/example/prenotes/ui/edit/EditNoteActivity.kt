@@ -1,6 +1,7 @@
 package com.example.prenotes.ui.edit
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.viewModels
@@ -32,6 +33,9 @@ class EditNoteActivity : AppCompatActivity() {
 
         // Получаем переданную заметку из Intent
         noteId = intent.getLongExtra("NOTE_ID", -1)
+
+
+
         if (noteId != -1L) {
             // Загружаем заметку для редактирования
             loadNote(noteId)
@@ -40,17 +44,22 @@ class EditNoteActivity : AppCompatActivity() {
         saveButton.setOnClickListener {
             saveNote()
         }
+        noteViewModel.loadAllNotes();
     }
 
     private fun loadNote(noteId: Long) {
         // Здесь вы можете загрузить заметку из базы данных
         // Например, используя ViewModel
-        noteViewModel.allNotes.observe(this) { notes ->
-            val note = notes.find { it.id == noteId }
-            note?.let {
-                titleEditText.setText(it.title)
-                contentEditText.setText(it.content)
-            }
+        noteViewModel.allNotes.observe(this,{ notes ->
+            NoteUpdate(notes)
+        })
+    }
+
+    fun NoteUpdate(notes: List<Note>) {
+        val note = notes.find { it.id == noteId }
+        note?.let {
+            titleEditText.setText(it.title)
+            contentEditText.setText(it.content)
         }
     }
 
@@ -58,7 +67,8 @@ class EditNoteActivity : AppCompatActivity() {
         val title = titleEditText.text.toString()
         val content = contentEditText.text.toString()
 
-        if (noteId != null) {
+        Log.d("my","saveNote");
+        if (noteId != -1L) {
             // Обновляем существующую заметку
             val updatedNote = Note(id = noteId!!, title = title, content = content)
             noteViewModel.update(updatedNote)

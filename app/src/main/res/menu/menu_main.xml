@@ -4,11 +4,14 @@
         android:id="@+id/action_add"
         android:title="Добавить"
         android:icon="@android:drawable/ic_input_add"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom"
+        android:textColor="@color/black"
+        />
 
     <item
         android:id="@+id/action_update"
         android:title="Обновить"
         android:icon="@android:drawable/ic_menu_recent_history"
-        android:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom"
+        android:textColor="@color/black"/>
 </menu>

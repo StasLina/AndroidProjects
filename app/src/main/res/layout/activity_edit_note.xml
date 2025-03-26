@@ -1,9 +1,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:layout_margin="4dp">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="start"
+            android:background="#2D2D2D"
+            android:contentDescription="Назад"
+            android:foreground="#FFFFFF"
+            android:src="@drawable/back_svgrepo_com" />
+
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/delete_1487_svgrepo_com"
+            android:contentDescription="Удалить"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_gravity="end"
+            app:tint="@android:color/white" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <EditText
         android:id="@+id/edit_note_title"
         android:layout_width="match_parent"
@@ -22,7 +57,8 @@
 
     <Button
         android:id="@+id/save_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save" />
+        android:text="Сохранить" />
+    </LinearLayout>
 </LinearLayout>
