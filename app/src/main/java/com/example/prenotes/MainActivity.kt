@@ -27,14 +27,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-//        setHasOptionsMenu(true)
 
         activityBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
-//        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(activityBinding.toolbar)
 
-        // setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -60,22 +57,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun onNoteClicked(note: Note) {
         val intent = Intent(this, EditNoteActivity::class.java)
-        intent.putExtra("NOTE_ID", note.id) // Передаем ID заметки для редактирования
+        intent.putExtra("NOTE_ID", note.id)
         startActivity(intent)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_add -> {
-                // Обработка добавления новой заметки
                 val intent = Intent(this, EditNoteActivity::class.java)
-                startActivity(intent) // Открываем EditNoteActivity для добавления новой заметки
+                startActivity(intent)
                 true
             }
             R.id.action_update -> {
-                // Обработка обновления заметок
                 Toast.makeText(this, "Обновление заметок", Toast.LENGTH_SHORT).show()
-                viewModel.loadAllNotes() // Загружаем заметки заново
+                viewModel.loadAllNotes()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -84,7 +79,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Обновите данные или UI
         viewModel.loadAllNotes()
     }
 }

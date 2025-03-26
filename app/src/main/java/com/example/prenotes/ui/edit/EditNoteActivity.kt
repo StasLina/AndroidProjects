@@ -33,7 +33,6 @@ class EditNoteActivity : AppCompatActivity() {
         contentEditText = activityBinding.editNoteContent
         saveButton = activityBinding.saveButton
 
-        // Получаем переданную заметку из Intent
         noteId = intent.getLongExtra("NOTE_ID", -1)
 
         activityBinding.backButton.setOnClickListener{
@@ -43,7 +42,6 @@ class EditNoteActivity : AppCompatActivity() {
 
 
         if (noteId != -1L) {
-            // Загружаем заметку для редактирования
             loadNote(noteId)
             noteViewModel.loadAllNotes();
             activityBinding.deleteButton.visibility = VISIBLE
@@ -55,8 +53,6 @@ class EditNoteActivity : AppCompatActivity() {
     }
 
     private fun loadNote(noteId: Long) {
-        // Здесь вы можете загрузить заметку из базы данных
-        // Например, используя ViewModel
         noteViewModel.allNotes.observe(this,{ notes ->
             NoteUpdate(notes)
         })
@@ -81,15 +77,13 @@ class EditNoteActivity : AppCompatActivity() {
 
         Log.d("my","saveNote");
         if (noteId != -1L) {
-            // Обновляем существующую заметку
             val updatedNote = Note(id = noteId!!, title = title, content = content)
             noteViewModel.update(updatedNote)
         } else {
-            // Создаем новую заметку
             val newNote = Note(title = title, content = content)
             noteViewModel.insert(newNote)
         }
 
-        finish() // Закрываем активность после сохранения
+        finish()
     }
 }
