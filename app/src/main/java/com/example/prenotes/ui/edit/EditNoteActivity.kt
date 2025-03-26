@@ -2,6 +2,8 @@ package com.example.prenotes.ui.edit
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.viewModels
@@ -34,17 +36,22 @@ class EditNoteActivity : AppCompatActivity() {
         // Получаем переданную заметку из Intent
         noteId = intent.getLongExtra("NOTE_ID", -1)
 
+        activityBinding.backButton.setOnClickListener{
+            finish()
+        }
+
 
 
         if (noteId != -1L) {
             // Загружаем заметку для редактирования
             loadNote(noteId)
+            noteViewModel.loadAllNotes();
+            activityBinding.deleteButton.visibility = VISIBLE
         }
 
         saveButton.setOnClickListener {
             saveNote()
         }
-        noteViewModel.loadAllNotes();
     }
 
     private fun loadNote(noteId: Long) {
@@ -60,6 +67,11 @@ class EditNoteActivity : AppCompatActivity() {
         note?.let {
             titleEditText.setText(it.title)
             contentEditText.setText(it.content)
+
+            activityBinding.deleteButton.setOnClickListener{
+                noteViewModel.delete(note)
+                finish()
+            }
         }
     }
 

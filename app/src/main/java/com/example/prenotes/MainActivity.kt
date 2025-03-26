@@ -11,13 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.prenotes.databinding.ActivityMainBinding
 import com.example.prenotes.data.model.MainActivityModel
 import com.example.prenotes.data.model.Note
+import com.example.prenotes.databinding.ActivityMainBinding
 import com.example.prenotes.ui.edit.EditNoteActivity
 import com.example.prenotes.ui.main.NoteAdapter
-
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -48,11 +46,11 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = noteAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        viewModel.loadAllNotes()
-
         viewModel.allNotes.observe(this) { notes ->
             noteAdapter.submitList(notes)
         }
+
+        viewModel.loadAllNotes()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -82,5 +80,11 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Обновите данные или UI
+        viewModel.loadAllNotes()
     }
 }
