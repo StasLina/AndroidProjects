@@ -1,0 +1,89 @@
+package com.example.prenotes.ui.edit
+
+import android.os.Bundle
+import android.util.Log
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
+import android.widget.Button
+import android.widget.EditText
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import com.example.prenotes.data.model.Note
+import com.example.prenotes.data.model.NoteViewModel
+import com.example.prenotes.databinding.ActivityEditNoteBinding
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class EditNoteActivity : AppCompatActivity() {
+
+    private val noteViewModel: NoteViewModel by viewModels()
+    private lateinit var titleEditText: EditText
+    private lateinit var contentEditText: EditText
+    private lateinit var saveButton: Button
+    private lateinit var activityBinding: ActivityEditNoteBinding
+    private var noteId: Long = -1L
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        activityBinding = ActivityEditNoteBinding.inflate(layoutInflater)
+        setContentView(activityBinding.root)
+
+        titleEditText = activityBinding.editNoteTitle
+        contentEditText = activityBinding.editNoteContent
+        saveButton = activityBinding.saveButton
+
+        noteId = intent.getLongExtra("NOTE_ID", -1)
+
+        activityBinding.backButton.setOnClickListener{
+            finish()
+        }
+
+
+
+        if (noteId != -1L) {
+            loadNote(noteId)
+            noteViewModel.loadAllNotes();
+            activityBinding.deleteButton.visibility = VISIBLE
+        }
+
+        saveButton.setOnClickListener {
+            saveNote()
+        }
+    }
+
+    private fun loadNote(noteId: Long) {
+        noteViewModel.allNotes.observe(this,{ notes ->
+            NoteUpdate(notes)
+        })
+    }
+
+    fun NoteUpdate(notes: List<Note>) {
+        val note = notes.find { it.id == noteId }
+        note?.let {
+            titleEditText.setText(it.title)
+            contentEditText.setText(it.content)
+
+            activityBinding.deleteButton.setOnClickListener{
+                noteViewModel.delete(note)
+                finish()
+            }
+        }
+    }
+
+    private fun saveNote() {
+        val title = titleEditText.text.toString()
+        val content = contentEditText.text.toString()
+
+        Log.d("my","saveNote");
+        if (noteId != -1L) {
+            val updatedNote = Note(id = noteId!!, title = title, content = content)
+            noteViewModel.update(updatedNote)
+        } else {
+            val newNote = Note(title = title, content = content)
+            noteViewModel.insert(newNote)
+        }
+
+        finish()
+    }
+}
