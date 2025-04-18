@@ -1,0 +1,106 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.canvas.presentation.main.DrawingViewModel" />
+
+        <variable
+            name="Color"
+            type="android.graphics.Color" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.example.canvas.presentation.main.view.DrawingView
+            android:id="@+id/drawingView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/controlsLayout" />
+
+        <LinearLayout
+            android:id="@+id/controlsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <SeekBar
+                    android:id="@+id/brushSizeSeekBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:progress="10"
+                    />
+<!--                android:onProgressChanged="@{(seekBar, progress, fromUser) -> viewModel.onBrushSizeChanged(progress.toFloat())}"-->
+                <TextView
+                    android:id="@+id/brushSizeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@{String.valueOf(viewModel.getCurrentBrush().size)}"
+                    tools:text="10" />
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvColors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    tools:listitem="@layout/item_color"
+                    android:orientation="horizontal"
+                    />
+
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/loadButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Load Image"
+                    android:onClick="@{() -> viewModel.onLoadClicked()}"
+                    android:layout_margin="4dp" />
+
+                <Button
+                    android:id="@+id/saveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Save Drawing"
+                    android:onClick="@{() -> viewModel.onSaveClicked(drawingView.getDrawingBitmap())}"
+                    android:layout_margin="4dp" />
+
+                <Button
+                    android:id="@+id/clearButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear"
+                    android:onClick="@{() -> drawingView.clear()}"
+                    android:layout_margin="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
