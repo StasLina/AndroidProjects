@@ -19,6 +19,9 @@ class GalleryViewModel @Inject constructor(
     private val _images = MutableLiveData<List<String>>()
     val images: LiveData<List<String>> = _images
 
+    private val _descriptions = mutableMapOf<String, String>()
+    val descriptions: Map<String, String> get() = _descriptions
+
     fun loadImages() {
         viewModelScope.launch {
             try {
@@ -29,6 +32,14 @@ class GalleryViewModel @Inject constructor(
             }
         }
     }
+
+    suspend fun loadDescriptions() {
+        // Загружаем все описания заранее
+        images.value?.forEach { uri ->
+            _descriptions[uri] = getImageDescription(uri) ?: ""
+        }
+    }
+
 
     suspend fun getImageDescription(imageUri: String): String? {
         return repository.getImageDescription(imageUri)

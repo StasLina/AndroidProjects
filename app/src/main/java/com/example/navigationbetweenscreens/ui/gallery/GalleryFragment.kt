@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.navigationbetweenscreens.databinding.FragmentGalleryBinding
 import com.example.navigationbetweenscreens.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
@@ -29,6 +31,16 @@ class GalleryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
+
+        viewModel.images.observe(viewLifecycleOwner) { images ->
+            adapter.submitList(images)
+
+            // Загружаем описания при первом получении изображений
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.loadDescriptions()
+            }
+        }
+
         return binding.root
     }
 
@@ -50,12 +62,12 @@ class GalleryFragment : Fragment() {
             onItemClick = { imageUri ->
                 findNavController().navigate(
                     GalleryFragmentDirections.actionGalleryFragmentToDetailFragment(
-                        imageUri = imageUri,
-                        description = viewModel.getImageDescription(imageUri) ?: ""
+                        imageUri,
+                        viewModel.descriptions[imageUri]?: "" //,viewModel.getImageDescription(imageUri) ?: "" // позиционный аргумент
                     )
                 )
             },
-            onItemLongClick = { imageUri ->
+             onItemLongClick = { imageUri ->
                 showDescriptionDialog(imageUri)
             }
         )

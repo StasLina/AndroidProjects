@@ -25,7 +25,6 @@
             app:argType="string" />
         <argument
             android:name="description"
-            app:argType="string"
-            android:defaultValue="" />
+            app:argType="string" />
     </fragment>
 </navigation>
