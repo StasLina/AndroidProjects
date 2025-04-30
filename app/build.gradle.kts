@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    id("androidx.navigation.safeargs")
+//    kotlin("plugin.serialization")
 }
 
 android {
@@ -11,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.navigationbetweenscreens"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -101,7 +103,7 @@ dependencies {
 
     // optional - RxJava2 support for Room
     implementation("androidx.room:room-rxjava2:$room_version")
-    1
+
     // optional - RxJava3 support for Room
     implementation("androidx.room:room-rxjava3:$room_version")
 
@@ -113,6 +115,30 @@ dependencies {
 
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
+
+    // Navigation Component
+    implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.6.0")
+//    val nav_version = "2.6.0"
+//
+//    // Jetpack Compose integration
+//    implementation("androidx.navigation:navigation-compose:$nav_version")
+//
+//    // Views/Fragments integrationv
+//    implementation("androidx.navigation:navigation-fragment:$nav_version")
+//    implementation("androidx.navigation:navigation-ui:$nav_version")
+//
+//    // Feature module support for Fragments
+//    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
+//
+//    // Testing Navigation
+//    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+//
+//    // JSON serialization library, works with the Kotlin serialization plugin
+//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 }
 
 buildscript {
@@ -123,5 +149,6 @@ buildscript {
 
     dependencies {
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.55")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0")
     }
 }
