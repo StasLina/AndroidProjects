@@ -15,26 +15,14 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.navigationbetweenscreens.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import  android.Manifest
-import timber.log.Timber
+import androidx.appcompat.app.AlertDialog
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var activityBinding: ActivityMainBinding
 
-//    val requestPermissionLauncher = registerForActivityResult(
-//        ActivityResultContracts.RequestPermission()
-//    ) { isGranted ->
-//        if (isGranted) {
-//            // Permission granted, load images
-//            Timber.d("READ_EXTERNAL_STORAGE permission granted")
-//        } else {
-//            // Permission denied
-//            Timber.w("READ_EXTERNAL_STORAGE permission denied")
-//        }
-//    }
-
     lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
-
+    private var isPermissionAlreadyGranted: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -47,17 +35,17 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-
         requestPermissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
-            if (isGranted) {
-                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show()
+            if (isPermissionAlreadyGranted){
+                Toast.makeText(this, "Разрешения уже имеются", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                if (isGranted) {
+                    Toast.makeText(this, "Разрешения получены", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Разрешения не получены", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -67,10 +55,28 @@ class MainActivity : AppCompatActivity() {
     private fun checkPermission() {
         val permission = getRequiredPermission()
 
-        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-            // Permission already granted
+        /*
+        Странный факт, без этих разрешений запрос окна не показывается
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+         */
+        var isPermission = checkSelfPermission(permission);
+        if (isPermission == PackageManager.PERMISSION_GRANTED) {
+            isPermissionAlreadyGranted = true;
         } else {
-            requestPermissionLauncher.launch(permission)
+            if (shouldShowRequestPermissionRationale(permission)) {
+                AlertDialog.Builder(this)
+                    .setTitle("Необходимы разрешения")
+                    .setMessage("Для корректной работы разрешите доступ к медиа файлом")
+                    .setPositiveButton("OK") { _, _ ->
+                        requestPermissionLauncher.launch(permission)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .create()
+                    .show()
+            } else {
+                requestPermissionLauncher.launch(permission)
+            }
         }
     }
 

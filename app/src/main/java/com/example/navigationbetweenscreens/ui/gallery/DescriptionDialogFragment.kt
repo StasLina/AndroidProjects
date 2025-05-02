@@ -3,7 +3,6 @@ package com.example.navigationbetweenscreens.ui.gallery
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.example.navigationbetweenscreens.R
 import com.example.navigationbetweenscreens.databinding.DialogDescriptionBinding

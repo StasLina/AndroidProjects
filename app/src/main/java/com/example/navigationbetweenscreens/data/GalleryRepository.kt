@@ -2,7 +2,6 @@ package com.example.navigationbetweenscreens.data
 
 import android.content.ContentResolver
 import android.content.ContentUris
-import android.net.Uri
 import android.provider.MediaStore
 import com.example.navigationbetweenscreens.data.local.ImageDao
 import com.example.navigationbetweenscreens.data.model.Image
