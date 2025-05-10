@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--        android:icon="@drawable/ic_map"-->
+    <item
+        android:id="@+id/mapFragment"
+        android:title="Карта" />
+    <item
+        android:id="@+id/routeBuilderFragment"
+        android:title="Маршрут" />
+    <!--        android:icon="@drawable/ic_route"-->
+
+</menu>
