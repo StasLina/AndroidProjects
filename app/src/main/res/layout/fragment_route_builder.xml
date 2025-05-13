@@ -22,36 +22,42 @@
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.google.android.material.button.MaterialButton
+        <ImageButton
             android:id="@+id/btnZoomToLocation"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/my_location" />
+            android:padding="-4dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/current_location"
+            />
 
-        <com.google.android.material.button.MaterialButton
+        <ImageButton
             android:id="@+id/btnZoomToDefault"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/default_location" />
+            android:padding="-4dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/glavpochtamp" />
 
-        <com.google.android.material.button.MaterialButton
+
+        <ImageButton
             android:id="@+id/btnRemoveLastPoint"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/remove_last" />
-
-        <com.google.android.material.button.MaterialButton
+            android:padding="-4dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/back_left" />
+        <ImageButton
             android:id="@+id/btnClearAll"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/clear_all" />
+            android:padding="-4dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/delete" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
