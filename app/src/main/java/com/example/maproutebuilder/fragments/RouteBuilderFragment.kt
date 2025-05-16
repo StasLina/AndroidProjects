@@ -169,73 +169,9 @@ class RouteBuilderFragment : Fragment(), InputListener, Session.RouteListener {
         Toast.makeText(context, "Ошибка построения маршрута", Toast.LENGTH_SHORT).show()
     }
 
-//    private fun displayRoute(route: Route) {
-//        val map = mapView.mapWindow.map
-//        val routeMapObject = map.mapObjects.addColoredPolyline(route.geometry)
-//
-//        routeMapObject.apply {
-//            strokeWidth = 5f
-//            setOutlineColor(Color.BLACK)
-//            setOutlineWidth(1f)
-//            setColors(listOf(Color.BLUE))
-//        }
-//    }
-
-//    private fun displayRoute(route: Route) {
-//        try {
-//            val map = mapView.mapWindow.map
-//            val geometry = route.geometry
-//
-//            // Очищаем предыдущие маршруты
-//            map.mapObjects.clear()
-//
-//            // Визуализация точек маршрута
-//            viewModel.routePoints.value?.forEach { point ->
-//                map.mapObjects.addPlacemark(point).apply {
-//                    setIconStyle(
-//                        IconStyle().apply {
-//                            setAnchor(0.5f, 1.0f)
-//                            setZIndex(2f)
-//                            setScale(1.5f)
-//                        }
-//                    )
-//                    userData = "waypoint"
-//                }
-//            }
-//            val polyline = map.mapObjects.addPolyline(geometry).apply {
-//                strokeWidth = 6f  // Толщина линии
-//                setStrokeColor(Color.parseColor("#4285F4"))  // Основной цвет
-//                outlineColor = Color.WHITE  // Цвет контура
-//                outlineWidth = 1.5f  // Толщина контура
-//                zIndex = 1f
-//                userData = "current_route"
-//
-//                // Для версий SDK 4.6.0+ можно добавить:
-//                // isGeodesic = true  // Геодезическая линия (учет кривизны Земли)
-//            }
-//
-//            // Автоматическое масштабирование под маршрут
-//            val cameraPosition = map.cameraPosition(geometry.boundingBox)
-//            map.move(
-//                CameraPosition(cameraPosition.target, cameraPosition.zoom - 0.5f, 0f, 0f),
-//                Animation(Animation.Type.SMOOTH, 1.5f),
-//                null
-//            )
-//
-//        } catch (e: Exception) {
-//            Timber.e(e, "Error displaying route")
-//            Toast.makeText(
-//                context,
-//                "Ошибка отображения маршрута: ${e.localizedMessage}",
-//                Toast.LENGTH_LONG
-//            ).show()
-//        }
-//    }
-
     private fun displayRoute(route: Route) {
         try {
             val map = mapView.mapWindow.map
-            val geometry = route.geometry
 
             // Очищаем предыдущие маршруты
             map.mapObjects.clear()
@@ -253,25 +189,6 @@ class RouteBuilderFragment : Fragment(), InputListener, Session.RouteListener {
                     userData = "waypoint"
                 }
             }
-
-            // Создаем полилинию маршрута с новым API
-            val polyline = map.mapObjects.addPolyline(geometry).apply {
-                strokeWidth = 6f  // Толщина линии
-                setStrokeColor(Color.parseColor("#4285F4"))  // Основной цвет
-                outlineColor = Color.WHITE  // Цвет контура
-                outlineWidth = 1.5f  // Толщина контура
-                zIndex = 1f
-                userData = "current_route"
-            }
-
-            // Автоматическое масштабирование
-            val boundingBox = calculateBoundingBox(geometry.points)
-//            val cameraPosition = map.cameraPosition()
-//            map.move(
-//                CameraPosition(cameraPosition.target, cameraPosition.zoom - 0.5f, 0f, 0f),
-//                Animation(Animation.Type.SMOOTH, 1.5f),
-//                null
-//            )
 
         } catch (e: Exception) {
             Timber.e(e, "Error displaying route")
@@ -322,7 +239,6 @@ class RouteBuilderFragment : Fragment(), InputListener, Session.RouteListener {
     }
 
     override fun onMapTap(map: Map, point: Point) {
-        // Не используется
     }
 
     override fun onMapLongTap(map: Map, point: Point) {
@@ -345,23 +261,4 @@ class RouteBuilderFragment : Fragment(), InputListener, Session.RouteListener {
         super.onDestroyView()
         _binding = null
     }
-}
-
-private fun calculateBoundingBox(points: List<Point>): BoundingBox {
-    var minLat = Double.MAX_VALUE
-    var maxLat = -Double.MAX_VALUE
-    var minLon = Double.MAX_VALUE
-    var maxLon = -Double.MAX_VALUE
-
-    for (point in points) {
-        minLat = minOf(minLat, point.latitude)
-        maxLat = maxOf(maxLat, point.latitude)
-        minLon = minOf(minLon, point.longitude)
-        maxLon = maxOf(maxLon, point.longitude)
-    }
-
-    return BoundingBox(
-        Point(minLat, minLon),
-        Point(maxLat, maxLon)
-    )
 }

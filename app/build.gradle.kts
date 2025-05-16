@@ -101,63 +101,22 @@ dependencies {
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
 
-    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
-    // See Add the KSP plugin to your project
     ksp("androidx.room:room-compiler:$room_version")
-
-    // If this project only uses Java source, use the Java annotationProcessor
-    // No additional plugins are necessary
     annotationProcessor("androidx.room:room-compiler:$room_version")
-
-    // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
-
-    // optional - RxJava2 support for Room
     implementation("androidx.room:room-rxjava2:$room_version")
-
-    // optional - RxJava3 support for Room
     implementation("androidx.room:room-rxjava3:$room_version")
-
-    // optional - Guava support for Room, including Optional and ListenableFuture
     implementation("androidx.room:room-guava:$room_version")
-
-    // optional - Test helpers
     testImplementation("androidx.room:room-testing:$room_version")
-
-    // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
 
     // Navigation Component
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-//    implementation("androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.6.0")
 
-
-//    val nav_version = "2.6.0"
-//
-//    // Jetpack Compose integration
-//    implementation("androidx.navigation:navigation-compose:$nav_version")
-//
-//    // Views/Fragments integrationv
-//    implementation("androidx.navigation:navigation-fragment:$nav_version")
-//    implementation("androidx.navigation:navigation-ui:$nav_version")
-//
-//    // Feature module support for Fragments
-//    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
-//
-//    // Testing Navigation
-//    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
-//
-//    // JSON serialization library, works with the Kotlin serialization plugin
-//    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-
-    // Yandex MapKit
     implementation("com.yandex.android:maps.mobile:4.5.1-full")
-
-    // Транспортный модуль (если требуется отдельно)
-//    implementation("com.yandex.android:transport.mobile:4.5.1-full")
 }
 
 buildscript {
