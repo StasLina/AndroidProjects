@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">maproutebuilder</string>
+    <string name="app_name">Путеводитель</string>
+    <string name="start_route_building">Построить путь</string>
+    <string name="my_location">Моя локация</string>
+    <string name="default_location">Главпочтамп</string>
+    <string name="remove_last">Отменить</string>
+    <string name="clear_all">Очистить</string>
 </resources>
